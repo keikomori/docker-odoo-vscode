@@ -1,0 +1,31 @@
+version: '3.1'
+services:
+
+  odoo:
+    container_name: odoo16
+    user: root
+    image: odoo:16.0
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    command: sleep infinity
+    volumes:
+    - ./odoo-web-data:/usr/lib/python3/dist-packages/odoo/odoo-web-data
+    - ./extra-addons:/usr/lib/python3/dist-packages/odoo/extra-addons:cached
+    - ./config:/usr/lib/python3/dist-packages/odoo/odoo
+
+  db:
+    container_name: db_odoo16
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+        - odoo-db-data:/var/lib/postgresql/data/pgdata
+
+volumes:
+  odoo-web-data:
+  odoo-db-data:
